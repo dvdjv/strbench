@@ -1,3 +1,9 @@
+#ifndef ARENA_H
+#define ARENA_H
+
+#include <assert.h>
+#include <sys/mman.h>
+
 typedef struct {
   char* memory;
   long  used;
@@ -32,3 +38,5 @@ static char* arena_allocate_bytes(Arena* arena, long bytes_size) {
 static void arena_clear(Arena* arena) {
   arena->used = 0;
 }
+
+#endif

@@ -9,5 +9,8 @@ add_executable(strbench main.c
         ll.c
         str.h
         str.c
-	arena.h
-	list.h)
+        arena.h
+        list.h
+        arr.c
+        arr.h
+        const.c)

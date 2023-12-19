@@ -1,3 +1,5 @@
+#include "const.h"
+
 typedef struct ListNode ListNode;
 typedef struct List     List;
 
@@ -30,6 +32,7 @@ static char* list_push_bytes(List* list, Arena* arena, long bytes_size) {
     ListNode* new_tail = arena_allocate(arena, ListNode);
     new_tail->used     = bytes_size;
     new_tail->next     = NULL;
+    list->tail->next   = new_tail;
     list->tail         = new_tail;
     return new_tail->memory;
   }
@@ -53,6 +56,20 @@ static void list_strcat(List* a, List* b) {
   a->tail       = b->tail;
 }
 
+static void list_push_str(List *l, Arena *a, const char* str, const size_t len) {
+  memcpy(list_push_bytes(l, a, len), str, len);
+}
+
+static char list_chechsum(const List* l) {
+  char checksum = 0;
+  const ListNode *head = l->head;
+  while (head) {
+    for (long i = 0; i < head->used; i++) checksum ^= head->memory[i];
+    head = head->next;
+  }
+  return checksum;
+}
+
 static void listbench(Arena* arena, long size) {
   List a = {};
   List b = {};
@@ -66,4 +83,26 @@ static void listbench(Arena* arena, long size) {
   list_memset(&b, 'b');
   list_strcat(&a, &b);
   arena_clear(arena);
+}
+
+static char list_checksum_bench(Arena* arena, const int nwrites) {
+  List buffers[4] = { {}, {}, {}, {} };
+  char checksums[4] = {0, 0, 0, 0};
+
+  for (int i = 0; i < nwrites; i++) {
+    const int index = rand() % (sizeof(buffers) / sizeof(List));
+    List *buffer = &buffers[index];
+    const char* line = phrases[(rand() % (sizeof(phrases) / sizeof(void*)))];
+    const size_t linelen = strlen(line);
+    for (int j = 0; j < linelen; j++) checksums[index] ^= line[j];
+    list_push_str(buffer, arena, line, linelen);
+  }
+
+  const char checksum = list_chechsum(&buffers[0]) ^ list_chechsum(&buffers[1]) ^
+                        list_chechsum(&buffers[2]) ^ list_chechsum(&buffers[3]);
+  const char verity = checksums[0] ^ checksums[1] ^ checksums[2] ^ checksums[3];
+  assert(checksum == verity);
+
+  arena_clear(arena);
+  return checksum;
 }
