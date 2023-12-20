@@ -15,8 +15,6 @@ typedef struct arr {
 
 arr arr_alloc();
 
-// void arr_free(const arr *array);
-
 void arr_push(arr *array, const char* str, size_t len);
 
 char arr_checksum(const arr *array);

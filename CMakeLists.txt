@@ -13,4 +13,6 @@ add_executable(strbench main.c
         list.h
         arr.c
         arr.h
-        const.c)
+        const.c
+        list.c
+        arena.c)
