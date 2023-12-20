@@ -1,10 +1,6 @@
-#include <assert.h>
 #include <stdio.h>
-#include <string.h>
 #include <time.h>
 #include <sys/mman.h>
-
-#define min(a, b) (((a) < (b)) ? (a) : (b))
 
 #include <stdlib.h>
 

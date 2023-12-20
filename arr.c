@@ -5,6 +5,7 @@
 #include "arr.h"
 
 #include <assert.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "const.h"
@@ -42,9 +43,9 @@ char arr_benchmark(Arena *arena, const int nwrites) {
     char checksums[4] = {0, 0, 0, 0};
 
     for (int i = 0; i < nwrites; i++) {
-        const unsigned long index = i % (sizeof(buffers) / sizeof(arr));
+        const unsigned long index = rand() % (sizeof(buffers) / sizeof(arr));
         arr* buffer = &buffers[index];
-        const char* line = phrases[(i % (sizeof(phrases) / sizeof(void*)))];
+        const char* line = phrases[(rand() % (sizeof(phrases) / sizeof(void*)))];
         const size_t linelen = strlen(line);
         for (int j = 0; j < linelen; j++) checksums[index] ^= line[j];
         arr_push(buffer, line, linelen);

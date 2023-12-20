@@ -4,6 +4,7 @@
 #include "list.h"
 
 #include <assert.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "arena.h"
@@ -85,9 +86,9 @@ char list_checksum_bench(Arena* arena, const int nwrites) {
   char checksums[4] = {0, 0, 0, 0};
 
   for (int i = 0; i < nwrites; i++) {
-    const int index = i % (sizeof(buffers) / sizeof(List));
+    const int index = rand() % (sizeof(buffers) / sizeof(List));
     List *buffer = &buffers[index];
-    const char* line = phrases[(i % (sizeof(phrases) / sizeof(void*)))];
+    const char* line = phrases[(rand() % (sizeof(phrases) / sizeof(void*)))];
     const size_t linelen = strlen(line);
     for (int j = 0; j < linelen; j++) checksums[index] ^= line[j];
     list_push_str(buffer, arena, line, linelen);
